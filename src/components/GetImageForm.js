@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import GetImageButton from './GetImageButton.js';
+import ImageHolder from './ImageHolder.js';
 const API_KEY = 'vS1Hieeu5FFtX9bEyiZz8ypU3maUszs16SmEQz4V';
 
 class GetImageForm extends Component {
@@ -9,40 +10,38 @@ class GetImageForm extends Component {
     this.state = {
       rover: "Curiosity",
       camera: "FHAZ",
-      images: [],
+      data: [],
       sol: ""
     }
   }
   fetchRoverImage(){
     console.log('click')
     this.setState({camera: this.state.camera, rover: this.state.rover, sol: this.state.sol});
-    let cam = this.props.camera;
-    let rove = this.props.rover;
-    let num = this.props.sol;
     let imageUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&camera=fhaz&api_key=${API_KEY}`;
     fetch(imageUrl)
     .then(results => {
       return results.json();
     }).then(data => {
-      console.log(data);
+      console.log(data.photos);
+      this.setState({data : data.photos})
     })
   }
-    //
-    // handleRover = (e) => {
-    //   e.preventDefault();
-    //   console.log('handleRover', e.target.value);
-    //   this.setState({rover : e.target.value})
-    // }
-    // handleCamera = (e) => {
-    //   e.preventDefault();
-    //   console.log('handleCamera', e.target.value);
-    //   this.setState({camera : e.target.value})
-    // }
-    // handleSol = (e) => {
-    //   e.preventDefault();
-    //   console.log('handleSol', e.target.value);
-    //   this.setState({sol : e.target.value})
-    // }
+
+    handleRover = (e) => {
+      e.preventDefault();
+      console.log('handleRover', e.target.value);
+      this.setState({rover : e.target.value})
+    }
+    handleCamera = (e) => {
+      e.preventDefault();
+      console.log('handleCamera', e.target.value);
+      this.setState({camera : e.target.value})
+    }
+    handleSol = (e) => {
+      e.preventDefault();
+      console.log('handleSol', e.target.value);
+      this.setState({sol : e.target.value})
+    }
 
     render(){
       return (
@@ -64,6 +63,7 @@ class GetImageForm extends Component {
           <input type="number" onChange={this.handleSol} max="2000" min="1000" value={this.state.value}/>
         </form>
         <GetImageButton buttonClick={() => this.fetchRoverImage()} />
+        <ImageHolder photos={this.state.data} />
         </div>
       )
       }
